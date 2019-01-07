@@ -1,7 +1,7 @@
 #!/bin/bash 
 
-curl -LJO https://github.com/whitesource/fs-agent-distribution/raw/master/standAlone/whitesource-unified-agent.jar
+curl -LJO https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss-unified-agent.jar
 
-curl -LJO https://github.com/whitesource/fs-agent-distribution/raw/master/standAlone/whitesource-unified-agent.config
+curl -LJO https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss-unified-agent.config
 
-java -jar whitesource-unified-agent.jar "$@"
+java -jar wss-unified-agent.jar "$@"
