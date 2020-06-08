@@ -1,8 +1,8 @@
 # Dockerized Unifed-Agent
 
-## about
-The Dockerized Unifed-Agent project provides a Dockerfile template containing different package managers (e.g. maven, npm...)
-installation commands that allows creating a more suitable and customizable run environment for scanning projects/files.
+## About
+The Dockerized Unifed-Agent project provides a Dockerfile template containing different package managers (e.g. maven, npm...).
+The file includes installation commands that allows creating a more suitable and customizable run environment for scanning projects/files.
 
 The user has the ability to add/remove package managers according to his needs just by commenting/uncommenting 
 relevant lines from the Dockerfile.
@@ -42,7 +42,7 @@ relevant lines from the Dockerfile.
 - downloads the latest `wss-unified-agent.jar`
 
 #### Dockerfile
-Containing above mentioned list of languages and package managers installations.
+The Dockefile contains a list of languages and package managers installations.
 
 Default installations are:
 - utility apps
@@ -72,10 +72,10 @@ Add the config file, the agent jar and the Data to the image (using docker `COPY
 this option requires a new image build each time. 
 
 #### Option 3:
-combine both options, like adding the `wss/*` to the image and use mounting for the `Data` directory
+Combine both options, like adding the `wss/*` to the image and use mounting for the `Data` directory
  
 
 ## Tips 
 It's possible to use the [Whitesource Unified-Agent configuration](https://whitesource.atlassian.net/wiki/spaces/WD/pages/804814917/Unified+Agent+Configuration+File+and+Parameters)
 properties: `whiteSourceFolderPath` and `log.files.path` 
-to save scan results and logs outside of the running container with combination of docker volume mounts.
+To save scan results and logs outside of the running container with combination of docker volume mounts.
