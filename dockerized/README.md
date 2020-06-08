@@ -36,12 +36,12 @@ relevant lines from the Dockerfile.
 25. Cargo
 
 ## Files
-##### wss_agent.sh and wss_agent.bat
+#### wss_agent.sh / wss_agent.bat
 - creates a directory `wss` 
 - downloads the latest `wss-unified-agent.config` configuration template file (requires editing after being downloaded) 
 - downloads the latest `wss-unified-agent.jar`
 
-##### Dockerfile
+#### Dockerfile
 Containing above mentioned list of languages and package managers installations.
 
 Default installations are:
