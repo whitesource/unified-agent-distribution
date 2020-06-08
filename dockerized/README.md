@@ -7,7 +7,7 @@ The file includes installation commands that allows creating a more suitable and
 The user has the ability to add/remove package managers according to his needs just by commenting/uncommenting 
 relevant lines from the Dockerfile.
 
-## Available in the Docker file:
+## Available in Dockerfile
 0.  Ubuntu:18.04 (base image)
 1.  required utility apps
 2.  Java (1.8)
@@ -52,7 +52,7 @@ Default installations are:
 - gradle
 - python 2.7, python3.6
  
-## Running the Dockerized agent
+## Running the dockerized agent
 1. run `wss_agent.*` script to download the agent jar and configurations template file
 2. edit the configuration `./wss/wss-unified-agent.config`
 3. select the directory to scan (let's call it `Data`) 
