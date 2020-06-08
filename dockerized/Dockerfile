@@ -322,3 +322,7 @@ RUN python -m pip install --upgrade pip && \
 ENV HOME ${WSS_USER_HOME}
 WORKDIR ${WSS_USER_HOME}
 USER ${WSS_USER}
+
+# COPY wss wss
+# COPY <data-dir> Data
+# CMD java -jar ./wss/wss-unified-agent.jar -c ./wss/wss-unified-agent.config -d ./Data`
