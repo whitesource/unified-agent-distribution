@@ -72,7 +72,7 @@ Add the config file, the agent jar and the Data to the image (using docker `COPY
 this option requires a new image build each time. 
 
 #### Option 3:
-combine both options, like adding the `wss/*` to image and use mounting for the `Data` directory
+combine both options, like adding the `wss/*` to the image and use mounting for the `Data` directory
  
 
 ## Tips 

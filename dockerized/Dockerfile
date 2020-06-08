@@ -323,6 +323,9 @@ ENV HOME ${WSS_USER_HOME}
 WORKDIR ${WSS_USER_HOME}
 USER ${WSS_USER}
 
+### copy data to the image
 # COPY wss wss
 # COPY <data-dir> Data
+
+### base command
 # CMD java -jar ./wss/wss-unified-agent.jar -c ./wss/wss-unified-agent.config -d ./Data`
