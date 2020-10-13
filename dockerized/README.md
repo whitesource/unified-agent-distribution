@@ -12,8 +12,8 @@ relevant lines from the Dockerfile.
 1.  required utility apps
 2.  Java (1.8)
 3.  Maven (3.5.4)
-4.  Node.js (8.9.4)
-5.  NPM (5.6.0)
+4.  Node.js (12.19.0)
+5.  NPM (6.14.8)
 6.  Yarn (1.5.1)
 7.  Bower (1.8.2)
 8.  Gradle (6.0.1)
