@@ -84,7 +84,7 @@ ENV MAVEN_CONFIG ${WSS_USER_HOME}/.m2
 
 ### Install Node.js (8.9.4) + NPM (5.6.0)
 RUN apt-get update && \
-	curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+	curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs build-essential && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
@@ -329,8 +329,9 @@ WORKDIR ${WSS_USER_HOME}
 USER ${WSS_USER}
 
 ### copy data to the image
-# COPY wss wss
+COPY wss-unified-agent.jar wss-unified-agent.jar
+RUN mkdir Data
 # COPY <data-dir> Data
 
 ### base command
-# CMD java -jar ./wss/wss-unified-agent.jar -c ./wss/wss-unified-agent.config -d ./Data`
+CMD java -jar ./wss-unified-agent.jar -d ./Data

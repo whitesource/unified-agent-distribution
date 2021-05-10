@@ -2,3 +2,4 @@
 .idea/
 /dockerized/data/
 /dockerized/wss/
+wss-unified-agent.jar
