@@ -352,8 +352,8 @@ ENV HOME ${WSS_USER_HOME}
 WORKDIR ${WSS_USER_HOME}
 USER ${WSS_USER}
 
-### copy data to the image
-COPY wss-unified-agent.jar wss-unified-agent.jar
+### copy data to the image & download Unified Agent
+RUN curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar
 RUN mkdir Data
 
 ### base command

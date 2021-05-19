@@ -1,19 +1,17 @@
-`# Dockerized Unified-Agent
+# Dockerized Unified-Agent
 
 Refer to https://github.com/whitesource/unified-agent-distribution/blob/master/dockerized/README.md for customization and original setup directions
 
 ## Differences 
 
 * Upgraded NodeJS to 12.x
-* Enabled prestep=true for all, but maven
+* Enabled prestep=true for all, but Maven
 * Installed all supported package managers, except Paket
 
 ## Build Directions: 
 
 ```
-git clone <this repository>
-cd ./dockerized
-./wss_agent.sh
+cd ./unified-agent-distribution
 docker build ./ -t docker-ua
 
 ```
@@ -27,6 +25,7 @@ SCANDIR=<full path name of directory to scan>
 
 # example scan directory
 # SCANDIR=home/userxyz/Documents/Code/SampleApplication
+# change <> values for product & project names
 
 docker run --rm --name docker-ua --mount type=bind,source=$SCANDIR,target=/home/wss-scanner/Data/ -e WS_APIKEY=$WS_APIKEY -e WS_PRODUCTNAME=<your-product-name> -e WS_PROJECTNAME=<your-project-name> docker-ua
 
