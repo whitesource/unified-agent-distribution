@@ -21,11 +21,11 @@ docker build ./ -t docker-ua
 
 ```
 export WS_APIKEY=<your-apikey>
-export SCANDIR=<full path name of directory to scan>
+SCANDIR=<full path name of directory to scan>
 
 # example scan directory
-# export SCANDIR=home/userxyz/Documents/Code/SampleApplication
+# SCANDIR=home/userxyz/Documents/Code/SampleApplication
 
-docker run --rm --name docker-ua --mount type=bind,source=$SCANDIR,target=/home/wss-scanner/Data/ -e WS_APIKEY=$WS_APIKEY -e WS_PRODUCTNAME=<your-product-name> -e WS_PROJECTNAME=<your-project-name> 
+docker run --rm --name docker-ua --mount type=bind,source=$SCANDIR,target=/home/wss-scanner/Data/ -e WS_APIKEY=$WS_APIKEY -e WS_PRODUCTNAME=<your-product-name> -e WS_PROJECTNAME=<your-project-name> docker-ua
 
 ```
