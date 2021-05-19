@@ -5,8 +5,8 @@ FROM ubuntu:18.04
 # 1.  utility apps
 # 2.  Java (1.8)
 # 3.  Maven (3.5.4)
-# 4.  Node.js (8.9.4)
-# 5.  NPM (5.6.0)
+# 4.  Node.js (12.22.1)
+# 5.  NPM (6.14.12)
 # 6.  Yarn (1.5.1)
 # 7.  Bower (1.8.2)
 # 8.  Gradle (6.0.1)
@@ -82,7 +82,7 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG ${WSS_USER_HOME}/.m2
 
 
-### Install Node.js (12.x)
+### Install Node.js (12.22.1) + NPM (6.14.12)
 RUN apt-get update && \
 	curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs build-essential && \
