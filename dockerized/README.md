@@ -5,6 +5,8 @@ Refer to https://github.com/whitesource/unified-agent-distribution/blob/master/d
 ## Differences 
 
 * Upgraded NodeJS to 12.x
+* Enabled prestep=true for all, but maven
+* Installed all supported package managers, except Paket
 
 ## Build Directions: 
 

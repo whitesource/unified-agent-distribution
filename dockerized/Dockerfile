@@ -108,7 +108,7 @@ ENV GRADLE_HOME /opt/gradle-6.0.1
 ENV PATH $PATH:/opt/gradle-6.0.1/bin
 
 
-### Install all the python2.7 + python3.6 packages
+### Install python3.6 packages
 RUN apt-get update && \
 	apt-get install -y python3-pip python3.6-venv && \
     apt-get install -y python-pip && \
@@ -141,13 +141,13 @@ RUN python -m pip install --upgrade pip && \
 #### Install Poetry (python)
 #### requires python3.X version matching the projects (defaults to python3.6)
 #### sed command sets the default selected python-executable used by poetry to be 'python3'
-#ENV POETRY_HOME ${WSS_USER_HOME}/.poetry
-#RUN curl -sSLO https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py && \
-#	sed -i 's/allowed_executa11bles = \["python", "python3"\]/allowed_executables = \["python3", "python"\]/g' get-poetry.py && \
-#	python3 get-poetry.py --yes --version 1.0.5 && \
-#	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.poetry && \
-#	rm -rf get-poetry.py
-#ENV PATH ${WSS_USER_HOME}/.poetry/bin:${PATH}
+ENV POETRY_HOME ${WSS_USER_HOME}/.poetry
+RUN curl -sSLO https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py && \
+	sed -i 's/allowed_executa11bles = \["python", "python3"\]/allowed_executables = \["python3", "python"\]/g' get-poetry.py && \
+	python3 get-poetry.py --yes --version 1.0.5 && \
+	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.poetry && \
+	rm -rf get-poetry.py
+ENV PATH ${WSS_USER_HOME}/.poetry/bin:${PATH}
 
 #### Install Ruby
 RUN apt-get update && \
@@ -329,9 +329,11 @@ ENV WS_NPM_IGNORENPMLSERRORS=true
 ENV WS_BOWER_RUNPRESTEP=true
 ENV WS_NUGET_RUNPRESTEP=true
 ENV WS_PYTHON_INSTALLVIRTUALENV=true
+ENV WS_PYTHON_IGNOREPIPINSTALLERRORS=true 
 ENV WS_PYTHON_RESOLVESETUPPYFILES=true
 ENV WS_PYTHON_RUNPIPENVPRESTEP=true
 ENV WS_PYTHON_IGNOREPIPENVINSTALLERRORS=true
+ENV WS_PYTHON_RUNPOETRYPRESTEP=true
 ENV WS_GO_COLLECTDEPENDENCIESATRUNTIME=true
 ENV WS_SBT_RUNPRESTEP=true
 ENV WS_R_RUNPRESTEP=true
