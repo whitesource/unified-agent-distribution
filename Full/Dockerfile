@@ -155,47 +155,47 @@ RUN apt-get update && \
 #### Install Poetry (python)
 #### requires python3.X version matching the projects (defaults to python3.6)
 #### sed command sets the default selected python-executable used by poetry to be 'python3'
-#ENV POETRY_HOME ${WSS_USER_HOME}/.poetry
-#RUN curl -sSLO https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py && \
-#	sed -i 's/allowed_executa11bles = \["python", "python3"\]/allowed_executables = \["python3", "python"\]/g' get-poetry.py && \
-#	python3 get-poetry.py --yes --version ${POETRY_VERSION} && \
-#	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.poetry && \
-#	rm -rf get-poetry.py
-#ENV PATH ${WSS_USER_HOME}/.poetry/bin:${PATH}
+ENV POETRY_HOME ${WSS_USER_HOME}/.poetry
+RUN curl -sSLO https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py && \
+	sed -i 's/allowed_executa11bles = \["python", "python3"\]/allowed_executables = \["python3", "python"\]/g' get-poetry.py && \
+	python3 get-poetry.py --yes --version ${POETRY_VERSION} && \
+	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.poetry && \
+	rm -rf get-poetry.py
+ENV PATH ${WSS_USER_HOME}/.poetry/bin:${PATH}
 
 #### Install Ruby
-#RUN apt-get update && \
-#	apt-get install -y ruby ruby-dev ruby-bundler && \
-#    apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y ruby ruby-dev ruby-bundler && \
+    apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 #### Install rbenv and ruby-build
 ### or maybe be saved to /etc/profile instead of /etc/profile.d/
-#RUN git clone https://github.com/sstephenson/rbenv.git ${WSS_USER_HOME}/.rbenv; \
-#	git clone https://github.com/sstephenson/ruby-build.git ${WSS_USER_HOME}/.rbenv/plugins/ruby-build; \
-#	${WSS_USER_HOME}/.rbenv/plugins/ruby-build/install.sh && \
-#	echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh && \
-#	echo 'eval "$(rbenv init -)"' >> ${WSS_USER_HOME}/.bashrc && \
-#	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.rbenv ${WSS_USER_HOME}/.bashrc
-#ENV PATH ${WSS_USER_HOME}/.rbenv/bin:$PATH
+RUN git clone https://github.com/sstephenson/rbenv.git ${WSS_USER_HOME}/.rbenv; \
+	git clone https://github.com/sstephenson/ruby-build.git ${WSS_USER_HOME}/.rbenv/plugins/ruby-build; \
+	${WSS_USER_HOME}/.rbenv/plugins/ruby-build/install.sh && \
+	echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh && \
+	echo 'eval "$(rbenv init -)"' >> ${WSS_USER_HOME}/.bashrc && \
+	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.rbenv ${WSS_USER_HOME}/.bashrc
+ENV PATH ${WSS_USER_HOME}/.rbenv/bin:$PATH
 
 #### Install GO:
-#USER ${WSS_USER}
-#RUN mkdir -p ${WSS_USER_HOME}/goroot && \
-#    curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar xvzf - -C ${WSS_USER_HOME}/goroot --strip-components=1
+USER ${WSS_USER}
+RUN mkdir -p ${WSS_USER_HOME}/goroot && \
+    curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar xvzf - -C ${WSS_USER_HOME}/goroot --strip-components=1
 ### Set GO environment variables
-#ENV GOROOT ${WSS_USER_HOME}/goroot
-#ENV GOPATH ${WSS_USER_HOME}/gopath
-#ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
+ENV GOROOT ${WSS_USER_HOME}/goroot
+ENV GOPATH ${WSS_USER_HOME}/gopath
+ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
 ### Install package managers
-#RUN go get -u github.com/golang/dep/cmd/dep
-#RUN go get github.com/tools/godep
-#RUN go get github.com/LK4D4/vndr
-#RUN go get -u github.com/kardianos/govendor
-#RUN go get -u github.com/gpmgo/gopm
-#RUN go get github.com/Masterminds/glide
-#USER root
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN go get github.com/tools/godep
+RUN go get github.com/LK4D4/vndr
+RUN go get -u github.com/kardianos/govendor
+RUN go get -u github.com/gpmgo/gopm
+RUN go get github.com/Masterminds/glide
+USER root
 
 #### Important note ###
 #### uncomment for:
@@ -203,86 +203,86 @@ RUN apt-get update && \
 ####    SBT
 ####    Mix/ Hex/ Erlang/ Elixir
 ####    dotnet/nuget cli's
-#RUN apt-get update && \
-#	apt-get install -y --force-yes build-essential && \
-#	apt-get install -y --force-yes zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y --force-yes build-essential && \
+	apt-get install -y --force-yes zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 #### Install Scala
-#RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.deb --no-check-certificate && \
-#	dpkg -i scala-${SCALA_VERSION}.deb && \
-#	rm scala-${SCALA_VERSION}.deb
+RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.deb --no-check-certificate && \
+	dpkg -i scala-${SCALA_VERSION}.deb && \
+	rm scala-${SCALA_VERSION}.deb
 ### Install SBT
-#RUN wget https://github.com/sbt/sbt/releases/download/v1.5.1/sbt-1.5.1.tgz && \
-#	tar xzvf sbt-1.5.1.tgz -C /usr/share/ && \
-#	update-alternatives --install /usr/bin/sbt sbt /usr/share/sbt/bin/sbt 9998
-#ENV SBT_HOME /usr/share/sbt/bin/
-#ENV PATH $PATH:$SBT_HOME
+RUN wget https://github.com/sbt/sbt/releases/download/v1.5.1/sbt-1.5.1.tgz && \
+	tar xzvf sbt-1.5.1.tgz -C /usr/share/ && \
+	update-alternatives --install /usr/bin/sbt sbt /usr/share/sbt/bin/sbt 9998
+ENV SBT_HOME /usr/share/sbt/bin/
+ENV PATH $PATH:$SBT_HOME
 
 
 #### Install PHP
-#RUN apt-get update && \
-#	apt-get install -y php7.2 && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y php7.2 && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 ### Install Composer
-#RUN curl -s https://getcomposer.org/installer | php
-#RUN mv composer.phar /usr/local/bin/composer
+RUN curl -s https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
 ### Install PHP Plugins
-#RUN apt-get update && \
-#	apt-get install -y php7.2-mbstring && \
-#	apt-get install -y php7.2-dom && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y php7.2-mbstring && \
+	apt-get install -y php7.2-dom && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 #### Install Mix/ Hex/ Erlang/ Elixir
-#ENV MIX_HOME ${WSS_USER_HOME}/.mix
-#RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
-#	dpkg -i erlang-solutions_2.0_all.deb && \
-#	apt-get update && \
-#	apt-get install esl-erlang -y && \
-#	apt-get install elixir -y && \
-#	mix local.hex --force && \
-#	rm erlang-solutions_2.0_all.deb && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+ENV MIX_HOME ${WSS_USER_HOME}/.mix
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
+	dpkg -i erlang-solutions_2.0_all.deb && \
+	apt-get update && \
+	apt-get install esl-erlang -y && \
+	apt-get install elixir -y && \
+	mix local.hex --force && \
+	rm erlang-solutions_2.0_all.deb && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 
 #### Install Cocoapods
-#RUN gem install cocoapods
-#RUN adduser cocoapods
-#USER cocoapods
-#RUN pod setup
-#USER root
+RUN gem install cocoapods -v 1.10.2
+RUN adduser cocoapods
+USER cocoapods
+RUN pod setup
+USER root
 
 #### Install R and Packrat
-#RUN apt-get update && \
-#	apt-get install -y r-base libopenblas-base r-base gdebi && \
-#	wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb && \
-#	gdebi rstudio-xenial-1.1.419-amd64.deb && \
-#	rm rstudio-xenial-1.1.419-amd64.deb && \
-#	R -e 'install.packages("packrat" , repos="http://cran.us.r-project.org");'  && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y r-base libopenblas-base r-base gdebi && \
+	wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb && \
+	gdebi rstudio-xenial-1.1.419-amd64.deb && \
+	rm rstudio-xenial-1.1.419-amd64.deb && \
+	R -e 'install.packages("packrat" , repos="http://cran.us.r-project.org");'  && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 
 #### Install Cabal
-#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 063DAB2BDC0B3F9FCEBC378BFF3AEACEF6F88286 && \
-#	echo "deb http://ppa.launchpad.net/hvr/ghc/ubuntu bionic main " | tee /etc/apt/sources.list.d/ppa_hvr_ghc.list && \
-#	apt-get update && \
-#	apt-get install -y ghc-${HASKELL_GHC_VERSION} cabal-install-${CABAL_VERSION} && \
-#	PATH="/opt/ghc/bin:${PATH}" && \
-#	cabal update && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
-#ENV PATH /opt/ghc/bin:$PATH
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 063DAB2BDC0B3F9FCEBC378BFF3AEACEF6F88286 && \
+	echo "deb http://ppa.launchpad.net/hvr/ghc/ubuntu bionic main " | tee /etc/apt/sources.list.d/ppa_hvr_ghc.list && \
+	apt-get update && \
+	apt-get install -y ghc-${HASKELL_GHC_VERSION} cabal-install-${CABAL_VERSION} && \
+	PATH="/opt/ghc/bin:${PATH}" && \
+	cabal update && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
+ENV PATH /opt/ghc/bin:$PATH
 
 ### Install dotnet cli/ sdk-2.2 and sdk-3.1 and sdk-5.0
 RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
@@ -324,32 +324,32 @@ RUN TMP=/tmp/nuget  && \
 	rm -rf $TMP
 
 ## Install Paket
-#RUN mozroots --import --sync && \
-#    TMP=/tmp/paket/src  && \
-#    LIB=/usr/local/lib && \
-#    BIN=/usr/local/bin && \
-#    rm -rf $TMP && \
-#    mkdir -p $TMP && \
-#    cd $TMP && \
-#    wget -O paket.zip https://www.nuget.org/api/v2/package/Paket/5.257.0 && \
-#    unzip paket.zip && \
-#    rm -rf $LIB/paket && \
-#    install -d $LIB/paket  && \
-#    install ./tools/paket.exe $LIB/paket/ && \
-#    rm -rf $BIN/paket && \
-#    echo $'!/usr/bin/env bash exec mono\n\
-#    exec mono /usr/local/lib/paket/paket.exe "$@"\n'\
-#    >> $BIN/paket && \
-#    chmod a+x $BIN/paket
+RUN mozroots --import --sync && \
+    TMP=/tmp/paket/src  && \
+    LIB=/usr/local/lib && \
+    BIN=/usr/local/bin && \
+    rm -rf $TMP && \
+    mkdir -p $TMP && \
+    cd $TMP && \
+    wget -O paket.zip https://www.nuget.org/api/v2/package/Paket/5.257.0 && \
+    unzip paket.zip && \
+    rm -rf $LIB/paket && \
+    install -d $LIB/paket  && \
+    install ./tools/paket.exe $LIB/paket/ && \
+    rm -rf $BIN/paket && \
+    echo $'!/usr/bin/env bash exec mono\n\
+    exec mono /usr/local/lib/paket/paket.exe "$@"\n'\
+    >> $BIN/paket && \
+    chmod a+x $BIN/paket
 
 #### Install Cargo
-#ENV HOME ${WSS_USER_HOME}
-#RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
-#	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.cargo && \
-#	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.rustup && \
-#	rm -rf /tmp/*
-#ENV PATH $HOME/.cargo/bin:$PATH
-#ENV HOME /root
+ENV HOME ${WSS_USER_HOME}
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.cargo && \
+	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.rustup && \
+	rm -rf /tmp/*
+ENV PATH $HOME/.cargo/bin:$PATH
+ENV HOME /root
 
 
 
