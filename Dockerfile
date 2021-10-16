@@ -82,9 +82,9 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG ${WSS_USER_HOME}/.m2
 
 
-### Install Node.js (8.9.4) + NPM (5.6.0)
+### Install Node.js (12.x)
 RUN apt-get update && \
-	curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+	curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs build-essential && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
@@ -299,17 +299,17 @@ RUN python -m pip install --upgrade pip && \
 
 
 #### Install dotnet cli and Nuget
-#RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-#	dpkg -i packages-microsoft-prod.deb && \
-#	apt-get update && \
-#	apt-get install -y apt-transport-https && \
-#	apt-get install -y dotnet-sdk-2.2 && \
-#	apt-get install -y dotnet-sdk-3.1 && \
-#	apt-get install -y nuget && \
-#	rm packages-microsoft-prod.deb && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+	dpkg -i packages-microsoft-prod.deb && \
+	apt-get update && \
+	apt-get install -y apt-transport-https && \
+	apt-get install -y dotnet-sdk-2.2 && \
+	apt-get install -y dotnet-sdk-3.1 && \
+	apt-get install -y nuget && \
+	rm packages-microsoft-prod.deb && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 
 #### Install Cargo
@@ -328,9 +328,11 @@ ENV HOME ${WSS_USER_HOME}
 WORKDIR ${WSS_USER_HOME}
 USER ${WSS_USER}
 
-### copy data to the image
-# COPY wss wss
-# COPY <data-dir> Data
+### Download Unified Agent
+curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar
+
+### Make Data Dir for scanning
+RUN mkdir Data
 
 ### base command
-# CMD java -jar ./wss/wss-unified-agent.jar -c ./wss/wss-unified-agent.config -d ./Data`
+CMD java -jar ./wss-unified-agent.jar -d ./Data
