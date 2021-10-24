@@ -35,6 +35,7 @@ ENV LANGUAGE	en_US.UTF-8
 ENV LANG    	en_US.UTF-8
 ENV LC_ALL  	en_US.UTF-8
 
+
 ### Install wget, curl, git, unzip, gnupg, locales
 RUN apt-get update && \
 	apt-get -y install \
@@ -48,6 +49,7 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /tmp/*
+
 
 ### add a new group + user without root premmsions
 ENV WSS_GROUP wss-group
@@ -108,7 +110,7 @@ ARG GRADLE_VERSION=6.0.1
 ### Install Gradle
 RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
     unzip gradle-${GRADLE_VERSION}-bin.zip -d /opt && \
-    rm gradle-${GRADLE_VERSION}-bin.zip
+    rm gradle-${GRADLE_VERSION}-bin.zip \
 
 ### Set Gradle in the environment variables
 ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}
@@ -123,6 +125,7 @@ RUN apt-get update && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /tmp/*
+
 
 # python utilities
 RUN python -m pip install --upgrade pip && \
@@ -325,15 +328,15 @@ RUN python -m pip install --upgrade pip && \
 
 
 ### Install Mono
-RUN apt-get update && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
-    echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-    apt-get update && \
-    apt-get install -y mono-devel && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp/*
+#RUN apt-get update && \
+#    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+#    apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
+#    echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+#    apt-get update && \
+#    apt-get install -y mono-devel && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/* && \
+#    rm -rf /tmp/*
 
 #### Install Nuget CLI
 #RUN TMP=/tmp/nuget  && \
