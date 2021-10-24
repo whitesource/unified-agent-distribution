@@ -324,16 +324,16 @@ RUN python -m pip install --upgrade pip && \
 #	rm -rf /tmp/*
 
 
-#### Install Mono
-#RUN apt-get update && \
-#    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-#    apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
-#    echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-#    apt-get update && \
-#    apt-get install -y mono-devel && \
-#    apt-get clean && \
-#    rm -rf /var/lib/apt/lists/* && \
-#    rm -rf /tmp/*
+### Install Mono
+RUN apt-get update && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
+    echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt-get update && \
+    apt-get install -y mono-devel && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/*
 
 #### Install Nuget CLI
 #RUN TMP=/tmp/nuget  && \
@@ -343,12 +343,12 @@ RUN python -m pip install --upgrade pip && \
 #    mkdir -p $TMP && \
 #    cd $TMP && \
 #    wget -O nuget.zip https://www.nuget.org/api/v2/package/NuGet.CommandLine/5.10.0 && \
-#	unzip nuget.zip && \
+#	 unzip nuget.zip && \
 #    install -d $LIB/nuget  && \
 #    install ./tools/NuGet.exe $LIB/nuget/ && \
-#	echo '#!/usr/bin/env bash\nexec mono /usr/local/lib/nuget/NuGet.exe "$@"\n' > $BIN/nuget && \
-#	chmod a+x $BIN/nuget && \
-#	rm -rf $TMP
+#	 echo '#!/usr/bin/env bash\nexec mono /usr/local/lib/nuget/NuGet.exe "$@"\n' > $BIN/nuget && \
+#	 chmod a+x $BIN/nuget && \
+#	 rm -rf $TMP
 
 
 ## Install Paket
@@ -365,9 +365,7 @@ RUN python -m pip install --upgrade pip && \
 #    install -d $LIB/paket  && \
 #    install ./tools/paket.exe $LIB/paket/ && \
 #    rm -rf $BIN/paket && \
-#    echo $'!/usr/bin/env bash exec mono\n\
-#    exec mono /usr/local/lib/paket/paket.exe "$@"\n'\
-#    >> $BIN/paket && \
+#	 echo '#!/usr/bin/env bash\nexec mono /usr/local/lib/paket/paket.exe "$@"\n' > $BIN/paket && \
 #    chmod a+x $BIN/paket
 
 
