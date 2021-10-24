@@ -35,10 +35,16 @@ ENV LANGUAGE	en_US.UTF-8
 ENV LANG    	en_US.UTF-8
 ENV LC_ALL  	en_US.UTF-8
 
-### Install wget, curl, git, unzip, gnupg, locales, rpm
+### Install wget, curl, git, unzip, gnupg, locales
 RUN apt-get update && \
-	apt-get -y install wget curl git unzip gnupg locales rpm && \
-	locale-gen en_US.UTF-8 && \
+	apt-get -y install \
+      curl \
+      git \
+      gnupg \
+      locales  \
+      unzip \
+      wget \
+    && locale-gen en_US.UTF-8 && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /tmp/*
@@ -65,12 +71,14 @@ RUN echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu bionic main" | tee /
 
 ### Install Maven (3.5.4)
 ARG MAVEN_VERSION=3.5.4
-ARG SHA=CE50B1C91364CB77EFE3776F756A6D92B76D9038B0A0782F7D53ACF1E997A14D
-ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
+ARG MAVEN_VERSION_SHA=CE50B1C91364CB77EFE3776F756A6D92B76D9038B0A0782F7D53ACF1E997A14D
+ARG MAVEN_BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG ${WSS_USER_HOME}/.m2
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
-	curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
-	echo "${SHA}  /tmp/apache-maven.tar.gz" | sha256sum -c - && \
+	curl -fsSL -o /tmp/apache-maven.tar.gz ${MAVEN_BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+	echo "${MAVEN_VERSION_SHA}  /tmp/apache-maven.tar.gz" | sha256sum -c - && \
 	tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 && \
 	rm -f /tmp/apache-maven.tar.gz && \
 	ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
@@ -78,13 +86,10 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
 	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.m2 && \
 	rm -rf /tmp/*
 
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG ${WSS_USER_HOME}/.m2
 
-
-### Install Node.js (8.9.4) + NPM (5.6.0)
+### Install Node.js (12.19.0) + NPM (6.14.8)
 RUN apt-get update && \
-	curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+	curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs build-essential && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
@@ -98,14 +103,16 @@ RUN npm i -g yarn@1.5.1
 #	echo '{ "allow_root": true }' > ${WSS_USER_HOME}/.bowerrc && \
 #	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.bowerrc
 
+ARG GRADLE_VERSION=6.0.1
 
 ### Install Gradle
-RUN wget -q https://services.gradle.org/distributions/gradle-6.0.1-bin.zip && \
-    unzip gradle-6.0.1-bin.zip -d /opt && \
-    rm gradle-6.0.1-bin.zip
+RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle-${GRADLE_VERSION}-bin.zip -d /opt && \
+    rm gradle-${GRADLE_VERSION}-bin.zip
+
 ### Set Gradle in the environment variables
-ENV GRADLE_HOME /opt/gradle-6.0.1
-ENV PATH $PATH:/opt/gradle-6.0.1/bin
+ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}
+ENV PATH $PATH:/opt/gradle-${GRADLE_VERSION}/bin
 
 
 ### Install all the python2.7 + python3.6 packages
@@ -123,6 +130,7 @@ RUN python -m pip install --upgrade pip && \
     python -m pip install virtualenv && \
     python3 -m pip install virtualenv
 
+
 #### optional: python3.7 (used with UA flag: 'python.path')
 #RUN apt-get update && \
 #    apt-get install -y python3.7 python3.7-venv && \
@@ -130,6 +138,8 @@ RUN python -m pip install --upgrade pip && \
 #    apt-get clean && \
 #    rm -rf /var/lib/apt/lists/* && \
 #    rm -rf /tmp/*
+
+
 #### optional: python3.8 (used with UA flag: 'python.path')
 #RUN apt-get update && \
 #    apt-get install -y python3.8 python3.8-venv && \
@@ -137,6 +147,21 @@ RUN python -m pip install --upgrade pip && \
 #    apt-get clean && \
 #    rm -rf /var/lib/apt/lists/* && \
 #    rm -rf /tmp/*
+
+
+### Install Conda (python)
+USER ${WSS_USER}
+RUN cd ${WSS_USER_HOME} && \
+    wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
+    bash Anaconda3-2021.05-Linux-x86_64.sh -b && \
+    rm Anaconda3-2021.05-Linux-x86_64.sh
+
+USER root
+RUN echo '#!/usr/bin/env bash' >> /usr/bin/conda && \
+    echo 'source ${WSS_USER_HOME}/anaconda3/etc/profile.d/conda.sh' >> /usr/bin/conda && \
+    echo '${WSS_USER_HOME}/anaconda3/bin/conda "$@"' >> /usr/bin/conda && \
+    chmod +x /usr/bin/conda
+
 
 #### Install Poetry (python)
 #### requires python3.X version matching the projects (defaults to python3.6)
@@ -148,6 +173,7 @@ RUN python -m pip install --upgrade pip && \
 #	chown -R ${WSS_USER}:${WSS_GROUP} ${WSS_USER_HOME}/.poetry && \
 #	rm -rf get-poetry.py
 #ENV PATH ${WSS_USER_HOME}/.poetry/bin:${PATH}
+
 
 #### Install Ruby
 #RUN apt-get update && \
@@ -169,20 +195,25 @@ RUN python -m pip install --upgrade pip && \
 
 
 #### Install GO:
+# ARG GOLANG_VERSION=1.17.1
 #USER ${WSS_USER}
 #RUN mkdir -p ${WSS_USER_HOME}/goroot && \
-#    curl https://storage.googleapis.com/golang/go1.12.6.linux-amd64.tar.gz | tar xvzf - -C ${WSS_USER_HOME}/goroot --strip-components=1
+#   curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar xvzf - -C ${WSS_USER_HOME}/goroot --strip-components=1
 ### Set GO environment variables
 #ENV GOROOT ${WSS_USER_HOME}/goroot
 #ENV GOPATH ${WSS_USER_HOME}/gopath
 #ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
 ### Install package managers
-#RUN go get -u github.com/golang/dep/cmd/dep
-#RUN go get github.com/tools/godep
-#RUN go get github.com/LK4D4/vndr
-#RUN go get -u github.com/kardianos/govendor
-#RUN go get -u github.com/gpmgo/gopm
-#RUN go get github.com/Masterminds/glide
+#
+#RUN go install github.com/tools/godep@latest
+#RUN go install github.com/LK4D4/vndr@latest
+#RUN go install  github.com/kardianos/govendor@latest
+#
+##All Deparacted/archived go package managers
+## RUN go install  github.com/gpmgo/gopm@latest
+## RUN go install  github.com/golang/dep/cmd/dep@latest
+## RUN go install github.com/Masterminds/glide@latest
+## RUN curl https://glide.sh/get | sh
 #USER root
 
 
@@ -201,18 +232,16 @@ RUN python -m pip install --upgrade pip && \
 
 
 #### Install Scala
-#RUN wget https://downloads.lightbend.com/scala/2.12.6/scala-2.12.6.deb --no-check-certificate && \
-#	dpkg -i scala-2.12.6.deb && \
-#	rm scala-2.12.6.deb
+# ARG SCALA_VERSION=2.12.6
+#RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.deb --no-check-certificate && \
+#	dpkg -i scala-${SCALA_VERSION}.deb && \
+#	rm scala-${SCALA_VERSION}.deb
 ### Install SBT
-#RUN curl -L -o sbt.deb http://dl.bintray.com/sbt/debian/sbt-1.1.6.deb && \
-#	dpkg -i sbt.deb && \
-#	rm sbt.deb
-#RUN apt-get update && \
-#	apt-get install -y sbt && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+#RUN wget https://github.com/sbt/sbt/releases/download/v1.5.1/sbt-1.5.1.tgz && \
+#	tar xzvf sbt-1.5.1.tgz -C /usr/share/ && \
+#	update-alternatives --install /usr/bin/sbt sbt /usr/share/sbt/bin/sbt 9998
+#ENV SBT_HOME /usr/share/sbt/bin/
+#ENV PATH $PATH:$SBT_HOME
 
 
 #### Install PHP
@@ -234,20 +263,20 @@ RUN python -m pip install --upgrade pip && \
 
 
 #### Install Mix/ Hex/ Erlang/ Elixir
-#RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && \
-#	dpkg -i erlang-solutions_1.0_all.deb && \
+#RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
+#	dpkg -i erlang-solutions_2.0_all.deb && \
 #	apt-get update && \
 #	apt-get install esl-erlang -y && \
 #	apt-get install elixir -y && \
 #	mix local.hex --force && \
-#	rm erlang-solutions_1.0_all.deb && \
+#	rm erlang-solutions_2.0_all.deb && \
 #	apt-get clean && \
 #	rm -rf /var/lib/apt/lists/* && \
 #	rm -rf /tmp/*
 
 
 #### Install Cocoapods
-#RUN gem install cocoapods
+#RUN gem install cocoapods -v 1.10.2
 #RUN adduser cocoapods
 #USER cocoapods
 #RUN pod setup
@@ -267,35 +296,18 @@ RUN python -m pip install --upgrade pip && \
 
 
 #### Install Cabal
+# ARG HASKELL_GHC_VERSION=8.6.5
+# ARG CABAL_VERSION=3.2
 #RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 063DAB2BDC0B3F9FCEBC378BFF3AEACEF6F88286 && \
 #	echo "deb http://ppa.launchpad.net/hvr/ghc/ubuntu bionic main " | tee /etc/apt/sources.list.d/ppa_hvr_ghc.list && \
 #	apt-get update && \
-#	apt-get install -y ghc-8.6.5 cabal-install-3.2 && \
+#	apt-get install -y ghc-${HASKELL_GHC_VERSION} cabal-install-${CABAL_VERSION} && \
 #	PATH="/opt/ghc/bin:${PATH}" && \
 #	cabal update && \
 #	apt-get clean && \
 #	rm -rf /var/lib/apt/lists/* && \
 #	rm -rf /tmp/*
 #ENV PATH /opt/ghc/bin:$PATH
-
-
-#### Install Paket
-#RUN apt-get update && \
-#	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-#	apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
-#	echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-#	apt-get update && \
-#	apt-get install -y mono-devel && \
-#	apt-get clean && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
-
-
-#RUN mozroots --import --sync && \
-#	git clone https://github.com/fsprojects/Paket.git && \
-#	cd Paket && \
-#	./build.sh && \
-#	./install.sh
 
 
 #### Install dotnet cli and Nuget
@@ -305,11 +317,58 @@ RUN python -m pip install --upgrade pip && \
 #	apt-get install -y apt-transport-https && \
 #	apt-get install -y dotnet-sdk-2.2 && \
 #	apt-get install -y dotnet-sdk-3.1 && \
-#	apt-get install -y nuget && \
+#	apt-get install -y dotnet-sdk-5.0 && \
 #	rm packages-microsoft-prod.deb && \
 #	apt-get clean && \
 #	rm -rf /var/lib/apt/lists/* && \
 #	rm -rf /tmp/*
+
+
+#### Install Mono
+#RUN apt-get update && \
+#    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+#    apt-get install -y --no-install-recommends apt-transport-https ca-certificates && \
+#    echo "deb https://download.mono-project.com/repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+#    apt-get update && \
+#    apt-get install -y mono-devel && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/* && \
+#    rm -rf /tmp/*
+
+#### Install Nuget CLI
+#RUN TMP=/tmp/nuget  && \
+#    LIB=/usr/local/lib && \
+#    BIN=/usr/local/bin && \
+#    rm -rf $TMP $LIB/nuget $BIN/nuget && \
+#    mkdir -p $TMP && \
+#    cd $TMP && \
+#    wget -O nuget.zip https://www.nuget.org/api/v2/package/NuGet.CommandLine/5.10.0 && \
+#	unzip nuget.zip && \
+#    install -d $LIB/nuget  && \
+#    install ./tools/NuGet.exe $LIB/nuget/ && \
+#	echo '#!/usr/bin/env bash\nexec mono /usr/local/lib/nuget/NuGet.exe "$@"\n' > $BIN/nuget && \
+#	chmod a+x $BIN/nuget && \
+#	rm -rf $TMP
+
+
+## Install Paket
+#RUN mozroots --import --sync && \
+#    TMP=/tmp/paket/src  && \
+#    LIB=/usr/local/lib && \
+#    BIN=/usr/local/bin && \
+#    rm -rf $TMP && \
+#    mkdir -p $TMP && \
+#    cd $TMP && \
+#    wget -O paket.zip https://www.nuget.org/api/v2/package/Paket/5.257.0 && \
+#    unzip paket.zip && \
+#    rm -rf $LIB/paket && \
+#    install -d $LIB/paket  && \
+#    install ./tools/paket.exe $LIB/paket/ && \
+#    rm -rf $BIN/paket && \
+#    echo $'!/usr/bin/env bash exec mono\n\
+#    exec mono /usr/local/lib/paket/paket.exe "$@"\n'\
+#    >> $BIN/paket && \
+#    chmod a+x $BIN/paket
 
 
 #### Install Cargo
@@ -320,8 +379,6 @@ RUN python -m pip install --upgrade pip && \
 #	rm -rf /tmp/*
 #ENV PATH $HOME/.cargo/bin:$PATH
 #ENV HOME /root
-
-
 
 ### Switch User ###
 ENV HOME ${WSS_USER_HOME}
