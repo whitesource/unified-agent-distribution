@@ -110,7 +110,7 @@ ARG GRADLE_VERSION=6.0.1
 ### Install Gradle
 RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
     unzip gradle-${GRADLE_VERSION}-bin.zip -d /opt && \
-    rm gradle-${GRADLE_VERSION}-bin.zip \
+    rm gradle-${GRADLE_VERSION}-bin.zip
 
 ### Set Gradle in the environment variables
 ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}
