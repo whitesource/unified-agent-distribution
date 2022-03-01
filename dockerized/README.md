@@ -2,7 +2,7 @@
 
 ## About
 The Dockerized Unifed-Agent project provides a Dockerfile template containing different package managers (e.g. maven, npm...).
-The file includes installation commands that allows creating a more suitable and customizable run environment for scanning projects/files.
+The file includes installation commands that allow creating a more suitable and customizable run environment for scanning projects/files.
 
 The user has the ability to add/remove package managers according to his needs just by commenting/uncommenting 
 relevant lines from the Dockerfile.
@@ -42,7 +42,7 @@ relevant lines from the Dockerfile.
 - downloads the latest `wss-unified-agent.jar`
 
 #### Dockerfile
-The Dockefile contains a list of languages and package managers installations.
+The Dockerfile contains a list of languages and package managers installations.
 
 Default installations are:
 - utility apps
