@@ -1,7 +1,6 @@
 # Dockerized Unifed-Agent
 
-## IMPORTANT
-    The Dockerized Unified Agent is no longer supported. We recommend using the stand-alone Unified Agent or one of the [Mend developer integrations.](https://docs.mend.io/bundle/integrations/page/developer_integrations.html)
+**IMPORTANT:** The Dockerized Unified Agent is no longer supported. We recommend using the stand-alone Unified Agent or one of the [Mend developer integrations.](https://docs.mend.io/bundle/integrations/page/developer_integrations.html)
 
 ## About
 The Dockerized Unifed-Agent project provides a Dockerfile template containing different package managers (e.g. maven, npm...).
